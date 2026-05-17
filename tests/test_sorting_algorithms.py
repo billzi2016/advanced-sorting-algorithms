@@ -1,0 +1,58 @@
+import random
+import unittest
+
+from lib.registry import iter_algorithms
+
+
+class SortingAlgorithmTest(unittest.TestCase):
+    def test_algorithm_metadata_is_unique(self) -> None:
+        keys = [spec.key for spec in iter_algorithms()]
+
+        self.assertEqual(len(keys), len(set(keys)))
+        self.assertGreaterEqual(len(keys), 15)
+
+    def test_all_algorithms_match_builtin_sorted(self) -> None:
+        cases = self._build_cases()
+
+        for spec in iter_algorithms():
+            with self.subTest(algorithm=spec.key):
+                for case in cases:
+                    source = case[:]
+                    actual = spec.function(source)
+
+                    self.assertEqual(actual, sorted(case))
+                    self.assertEqual(source, case)
+
+    def _build_cases(self) -> list[list[int]]:
+        cases = [
+            [],
+            [1],
+            [2, 1],
+            [1, 2, 3, 4, 5],
+            [5, 4, 3, 2, 1],
+            [3, 3, 3, 3],
+            [4, -1, 0, -7, 8, 3, 3, -1],
+            [100, -100, 50, -50, 0, 25, -25],
+            list(range(64)),
+            list(range(64, 0, -1)),
+            [0, -1, 1, -1, 0, 1, 999, -999],
+        ]
+
+        rng = random.Random(20260517)
+        for length in [0, 1, 2, 3, 7, 16, 31, 64, 127]:
+            for _ in range(5):
+                cases.append([rng.randint(-250, 250) for _ in range(length)])
+
+        for length in [16, 64, 128]:
+            values = list(range(length))
+            for _ in range(max(1, length // 12)):
+                left = rng.randrange(length)
+                right = rng.randrange(length)
+                values[left], values[right] = values[right], values[left]
+            cases.append(values)
+
+        return cases
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -20,3 +20,19 @@ htmlcov/
 .venv/
 venv/
 env/
+
+# 本地环境变量和日志
+.env
+.env.*
+*.log
+
+# 构建和发布产物
+build/
+dist/
+*.egg-info/
+
+# Benchmark 和分析输出
+benchmark-results/
+benchmarks/results/
+reports/
+*.prof
