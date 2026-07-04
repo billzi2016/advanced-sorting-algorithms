@@ -1,54 +1,54 @@
 # Advanced Sorting Algorithms
 
-Advanced Sorting Algorithms 是一个面向排序算法实现、验证和性能分析的 Python 项目。项目将常见排序、分治排序、分布式排序和混合排序统一到同一套接口中，提供可复现的正确性验证和本地 benchmark 工具，便于比较不同算法在数据分布、输入规模和稳定性约束下的行为差异。
+Advanced Sorting Algorithms is a Python project for implementing, validating, and analyzing sorting algorithms. It brings common sorts, divide-and-conquer sorts, distribution-based sorts, and hybrid sorts into one consistent interface. The project provides reproducible correctness checks and local benchmark tooling, making it easier to compare how algorithms behave under different data distributions, input sizes, and stability requirements.
 
-## 项目目标
+## Project Goals
 
-- 实现一组覆盖面较完整的排序算法，保持统一输入输出约定。
-- 为每个算法记录稳定性、复杂度、空间开销、适用场景和输入约束。
-- 使用确定性样例和随机样例验证排序结果与 `sorted()` 一致。
-- 提供可配置 benchmark，用固定随机种子复现不同数据分布下的运行时间。
-- 保持项目结构清晰，便于继续扩展算法、测试和实验维度。
+- Implement a broad set of sorting algorithms with consistent input and output conventions.
+- Record each algorithm's stability, complexity, space cost, applicable scenarios, and input constraints.
+- Validate results against `sorted()` using deterministic and randomized samples.
+- Provide configurable benchmarks that use fixed random seeds to reproduce timings across data distributions.
+- Keep the project structure clear so algorithms, tests, and experiment dimensions can be extended easily.
 
-## 核心功能
+## Core Features
 
-- 排序算法库：所有算法位于 `lib/`，函数接收 `list[int]`，返回新的有序列表，不修改输入数组。
-- 算法注册表：`lib/registry.py` 统一管理算法函数、复杂度、稳定性和适用说明。
-- 命令行入口：`main.py` 支持列出算法、运行正确性验证和执行 benchmark。
-- 单元测试：`tests/` 覆盖空数组、重复值、负数、逆序、近乎有序和随机输入。
-- Benchmark：`benchmarks/benchmark.py` 支持多输入规模、多数据分布、多轮重复和 CSV/JSON 输出。
+- Sorting algorithm library: all algorithms live in `lib/`; each function accepts `list[int]`, returns a new sorted list, and does not mutate the input array.
+- Algorithm registry: `lib/registry.py` centrally manages algorithm functions, complexity metadata, stability, and usage notes.
+- Command-line entry point: `main.py` can list algorithms, run correctness verification, and execute benchmarks.
+- Unit tests: `tests/` covers empty arrays, duplicate values, negative numbers, reversed input, nearly sorted input, and random input.
+- Benchmarks: `benchmarks/benchmark.py` supports multiple input sizes, data distributions, repeated runs, and CSV/JSON output.
 
-## 已实现算法
+## Implemented Algorithms
 
-| 算法 | 类型 | 平均时间复杂度 | 最坏时间复杂度 | 空间复杂度 | 稳定 |
+| Algorithm | Type | Average Time Complexity | Worst Time Complexity | Space Complexity | Stable |
 | --- | --- | --- | --- | --- | --- |
-| Bubble Sort | exchange | O(n^2) | O(n^2) | O(1) | 是 |
-| Cocktail Shaker Sort | exchange | O(n^2) | O(n^2) | O(1) | 是 |
-| Comb Sort | exchange | O(n^2 / 2^p) | O(n^2) | O(1) | 否 |
-| Selection Sort | selection | O(n^2) | O(n^2) | O(1) | 否 |
-| Insertion Sort | insertion | O(n^2) | O(n^2) | O(1) | 是 |
-| Shell Sort | insertion | 依赖 gap 序列 | O(n^2) | O(1) | 否 |
-| Merge Sort | merge | O(n log n) | O(n log n) | O(n) | 是 |
-| Tim Sort | hybrid | O(n log n) | O(n log n) | O(n) | 是 |
-| Quick Sort | partition | O(n log n) | O(n^2) | O(log n) | 否 |
-| Stable Quick Sort | partition | O(n log n) | O(n^2) | O(n) | 是 |
-| Three-way Quick Sort | partition | O(n log n) | O(n^2) | O(log n) | 否 |
-| Dual-pivot Quick Sort | partition | O(n log n) | O(n^2) | O(log n) | 否 |
-| Intro Sort | hybrid | O(n log n) | O(n log n) | O(log n) | 否 |
-| Heap Sort | selection | O(n log n) | O(n log n) | O(1) | 否 |
-| Tree Sort | tree | O(n log n) | O(n^2) | O(n) | 否 |
-| Counting Sort | distribution | O(n + k) | O(n + k) | O(k) | 是 |
-| Radix Sort | distribution | O(dn) | O(dn) | O(n) | 是 |
-| Bucket Sort | distribution | O(n + k) | O(n^2) | O(n + k) | 是 |
+| Bubble Sort | exchange | O(n^2) | O(n^2) | O(1) | Yes |
+| Cocktail Shaker Sort | exchange | O(n^2) | O(n^2) | O(1) | Yes |
+| Comb Sort | exchange | O(n^2 / 2^p) | O(n^2) | O(1) | No |
+| Selection Sort | selection | O(n^2) | O(n^2) | O(1) | No |
+| Insertion Sort | insertion | O(n^2) | O(n^2) | O(1) | Yes |
+| Shell Sort | insertion | Depends on gap sequence | O(n^2) | O(1) | No |
+| Merge Sort | merge | O(n log n) | O(n log n) | O(n) | Yes |
+| Tim Sort | hybrid | O(n log n) | O(n log n) | O(n) | Yes |
+| Quick Sort | partition | O(n log n) | O(n^2) | O(log n) | No |
+| Stable Quick Sort | partition | O(n log n) | O(n^2) | O(n) | Yes |
+| Three-way Quick Sort | partition | O(n log n) | O(n^2) | O(log n) | No |
+| Dual-pivot Quick Sort | partition | O(n log n) | O(n^2) | O(log n) | No |
+| Intro Sort | hybrid | O(n log n) | O(n log n) | O(log n) | No |
+| Heap Sort | selection | O(n log n) | O(n log n) | O(1) | No |
+| Tree Sort | tree | O(n log n) | O(n^2) | O(n) | No |
+| Counting Sort | distribution | O(n + k) | O(n + k) | O(k) | Yes |
+| Radix Sort | distribution | O(dn) | O(dn) | O(n) | Yes |
+| Bucket Sort | distribution | O(n + k) | O(n^2) | O(n + k) | Yes |
 
-## 技术栈
+## Tech Stack
 
 - Python 3.10+
-- 标准库 `argparse`、`random`、`time`、`statistics`、`csv`、`json`
-- 标准库 `unittest`
-- 无第三方依赖
+- Standard library `argparse`, `random`, `time`, `statistics`, `csv`, `json`
+- Standard library `unittest`
+- No third-party dependencies
 
-## 项目结构
+## Project Structure
 
 ```text
 advanced-sorting-algorithms/
@@ -83,82 +83,82 @@ advanced-sorting-algorithms/
     └── test_sorting_algorithms.py
 ```
 
-## 运行方式
+## Usage
 
-列出全部算法和元数据：
+List all algorithms and metadata:
 
 ```bash
 python3 main.py list
 ```
 
-运行正确性验证：
+Run correctness verification:
 
 ```bash
 python3 main.py verify
 ```
 
-只验证指定算法：
+Verify only selected algorithms:
 
 ```bash
 python3 main.py verify --algorithms intro_sort,tim_sort,three_way_quick_sort
 ```
 
-运行本地 benchmark：
+Run a local benchmark:
 
 ```bash
 python3 main.py benchmark --sizes 32,128,512 --repeat 3
 ```
 
-将 benchmark 结果写入文件：
+Write benchmark results to a file:
 
 ```bash
 python3 main.py benchmark --sizes 64,256,1024 --output benchmarks/results/latest.csv
 ```
 
-运行单元测试：
+Run unit tests:
 
 ```bash
 python3 -B -m unittest discover -s tests
 ```
 
-## 正确性验证
+## Correctness Verification
 
-验证逻辑会覆盖：
+The verification logic covers:
 
-- 空数组和单元素数组
-- 已排序数组和逆序数组
-- 重复元素
-- 负数、零和正数混合
-- 大小值跨度较大的整数
-- 固定随机种子生成的随机数组
-- 近乎有序数组
-- 输入数组不被修改的接口约束
+- empty arrays and single-element arrays
+- sorted arrays and reversed arrays
+- duplicate elements
+- mixed negative numbers, zero, and positive numbers
+- integers with a large value range
+- random arrays generated with fixed random seeds
+- nearly sorted arrays
+- the interface requirement that the input array is not mutated
 
-所有算法的输出都会与 Python 内置 `sorted()` 结果对比。
+Every algorithm's output is compared with Python's built-in `sorted()` result.
 
-## Benchmark 说明
+## Benchmark Notes
 
-Benchmark 支持以下数据分布：
+Benchmarks support the following data distributions:
 
-- `random`：整数随机分布
-- `sorted`：完全有序
-- `reversed`：完全逆序
-- `duplicates`：重复值密集
-- `nearly_sorted`：局部扰动的近乎有序数组
+- `random`: random integer distribution
+- `sorted`: fully sorted input
+- `reversed`: fully reversed input
+- `duplicates`: dense duplicate values
+- `nearly_sorted`: nearly sorted arrays with local perturbations
 
-默认 benchmark 不保存结果，只在终端输出表格。需要沉淀实验数据时，可以通过 `--output` 写入 `.csv` 或 `.json`。仓库不内置固定性能结论，避免将不同机器、不同解释器版本下的运行时间混为一谈。
+By default, benchmarks do not save results and only print a table in the terminal. When experiment data needs to be preserved, use `--output` to write `.csv` or `.json` files. The repository does not include fixed performance conclusions, because runtimes from different machines and Python interpreter versions should not be mixed together.
 
-## 当前进度
+## Current Progress
 
-- 已完成 18 个排序算法实现。
-- 已完成统一算法注册表。
-- 已完成 CLI 入口、正确性验证和 benchmark 工具。
-- 已完成 `unittest` 测试用例。
-- 已补充 README 和 `.gitignore`。
+- 18 sorting algorithms are implemented.
+- A unified algorithm registry is complete.
+- CLI entry point, correctness verification, and benchmark tooling are complete.
+- `unittest` test cases are complete.
+- README and `.gitignore` have been added.
 
-## 后续计划
+## Roadmap
 
-- 增加外部排序示例，用分块、临时文件和多路归并处理内存受限场景。
-- 增加更细粒度的 benchmark 报告，包括比较次数、交换次数和内存峰值。
-- 增加稳定性验证的对象排序版本，区分值相同但原始位置不同的记录。
-- 增加可视化输出，将不同算法在输入规模和分布上的表现生成图表。
+- Add an external sorting example using chunks, temporary files, and multiway merge for memory-constrained scenarios.
+- Add more detailed benchmark reports, including comparison counts, swap counts, and peak memory usage.
+- Add an object-sorting version for stability validation, so records with equal values but different original positions can be distinguished.
+- Add visualization output to generate charts for algorithm behavior across input sizes and distributions.

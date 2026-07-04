@@ -1,3 +1,10 @@
+"""排序算法 benchmark 工具。
+
+本模块负责生成不同分布的数据集、重复运行算法、验证结果正确性，
+并把计时结果打印或写入 CSV/JSON。benchmark 只用于本地相对比较，
+不在仓库中固化某台机器上的性能结论。
+"""
+
 import argparse
 import csv
 import json
@@ -17,6 +24,8 @@ from lib.registry import AlgorithmSpec, get_algorithm, iter_algorithms
 
 
 def parse_sizes(value: str) -> list[int]:
+    """解析逗号分隔的输入规模列表。"""
+
     sizes = [int(item.strip()) for item in value.split(",") if item.strip()]
     if not sizes:
         raise ValueError("at least one size is required")
@@ -26,6 +35,8 @@ def parse_sizes(value: str) -> list[int]:
 
 
 def parse_patterns(value: str) -> list[str]:
+    """解析并校验 benchmark 数据分布名称。"""
+
     patterns = [item.strip() for item in value.split(",") if item.strip()]
     supported = {"random", "sorted", "reversed", "duplicates", "nearly_sorted"}
     unknown = sorted(set(patterns) - supported)
@@ -35,12 +46,16 @@ def parse_patterns(value: str) -> list[str]:
 
 
 def select_algorithms(value: str | None) -> list[AlgorithmSpec]:
+    """根据逗号分隔 key 选择算法；未提供时选择全部。"""
+
     if not value:
         return list(iter_algorithms())
     return [get_algorithm(item.strip()) for item in value.split(",") if item.strip()]
 
 
 def build_dataset(pattern: str, size: int, rng: random.Random) -> list[int]:
+    """按指定分布构造一个 benchmark 输入数组。"""
+
     # 所有数据集由外部传入的 rng 生成，保证相同 seed 下可复现。
     if pattern == "random":
         bound = max(10, size * 4)
@@ -76,6 +91,12 @@ def run_benchmark(
     repeat: int,
     seed: int,
 ) -> list[dict[str, Any]]:
+    """运行 benchmark，并返回结构化结果行。
+
+    每个 size/pattern 组合只生成一份基准数据，各算法都在其副本上运行。
+    这样可以保证不同算法面对同一输入，同时避免算法修改输入影响后续轮次。
+    """
+
     if repeat <= 0:
         raise ValueError("repeat must be positive")
 
@@ -122,6 +143,8 @@ def run_benchmark(
 
 
 def print_benchmark_table(rows: list[dict[str, Any]]) -> None:
+    """把 benchmark 结果打印成终端表格。"""
+
     headers = [
         "algorithm",
         "pattern",
@@ -155,6 +178,8 @@ def print_benchmark_table(rows: list[dict[str, Any]]) -> None:
 
 
 def write_rows(rows: list[dict[str, Any]], output: str) -> None:
+    """根据输出后缀把结果写入 JSON 或 CSV 文件。"""
+
     output_path = Path(output)
     # 输出目录通常是本地实验产物目录，按需创建但不写入仓库默认数据。
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -183,6 +208,8 @@ def write_rows(rows: list[dict[str, Any]], output: str) -> None:
 
 
 def parse_args() -> argparse.Namespace:
+    """解析独立 benchmark 脚本的命令行参数。"""
+
     parser = argparse.ArgumentParser(description="Run sorting algorithm benchmarks.")
     parser.add_argument("--algorithms", help="Comma-separated algorithm keys.")
     parser.add_argument("--sizes", default="32,128,512")
@@ -197,6 +224,8 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
+    """运行独立 benchmark CLI。"""
+
     args = parse_args()
     rows = run_benchmark(
         algorithms=select_algorithms(args.algorithms),

@@ -1,7 +1,19 @@
+"""树排序。
+
+树排序先把元素插入二叉搜索树，再通过中序遍历输出升序序列。
+这里没有使用自平衡树，因此有序输入时可能退化到 O(n^2)；
+模块重点是展示“搜索树结构如何产生排序结果”。
+"""
+
 from __future__ import annotations
 
 
 class _Node:
+    """树排序内部 BST 节点。
+
+    count 用于压缩重复值，避免相同 value 在树上生成一长串重复节点。
+    """
+
     __slots__ = ("value", "count", "left", "right")
 
     def __init__(self, value: int) -> None:
@@ -12,6 +24,8 @@ class _Node:
 
 
 def tree_sort(values: list[int]) -> list[int]:
+    """通过构建 BST 并中序遍历返回升序列表。"""
+
     if not values:
         return []
 
@@ -26,6 +40,8 @@ def tree_sort(values: list[int]) -> list[int]:
 
 
 def _insert(root: _Node, value: int) -> None:
+    """把 value 插入 BST；重复值只增加当前节点计数。"""
+
     current = root
 
     while True:
@@ -46,6 +62,8 @@ def _insert(root: _Node, value: int) -> None:
 
 
 def _in_order(node: _Node | None, result: list[int]) -> None:
+    """中序遍历 BST，并按 count 展开重复值。"""
+
     if node is None:
         return
 

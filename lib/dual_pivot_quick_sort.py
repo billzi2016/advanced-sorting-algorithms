@@ -1,4 +1,14 @@
+"""双基准快速排序。
+
+双基准快速排序使用低、高两个基准，把数组划分为三段：
+小于低基准、位于两个基准之间、大于高基准。
+它展示了现代库排序中常见的多路分区思想。
+"""
+
+
 def dual_pivot_quick_sort(values: list[int]) -> list[int]:
+    """使用双基准分区返回升序副本。"""
+
     # 在副本上排序，统一满足“返回新列表、不修改输入”的项目约定。
     result = values[:]
     _sort(result, 0, len(result) - 1)
@@ -6,6 +16,8 @@ def dual_pivot_quick_sort(values: list[int]) -> list[int]:
 
 
 def _sort(values: list[int], left: int, right: int) -> None:
+    """在闭区间 [left, right] 内执行双基准快速排序。"""
+
     if left >= right:
         return
 

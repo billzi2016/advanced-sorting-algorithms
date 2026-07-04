@@ -1,3 +1,9 @@
+"""排序算法包。
+
+这里统一导出所有排序函数，方便外部用 `from lib import ...` 的形式调用。
+每个函数都遵循“不修改输入，返回新列表”的项目约定。
+"""
+
 from lib.bubble_sort import bubble_sort
 from lib.bucket_sort import bucket_sort
 from lib.cocktail_sort import cocktail_sort

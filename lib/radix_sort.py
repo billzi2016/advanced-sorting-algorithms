@@ -1,4 +1,14 @@
+"""基数排序。
+
+基数排序按数字位从低到高反复执行稳定计数排序。
+由于常见 LSD 基数排序天然处理非负整数，本实现把负数和非负数拆开：
+负数取绝对值排序后反转，再恢复负号。
+"""
+
+
 def radix_sort(values: list[int]) -> list[int]:
+    """对整数列表执行十进制 LSD 基数排序。"""
+
     # 空数组直接返回空数组。
     if not values:
         return []
@@ -15,6 +25,8 @@ def radix_sort(values: list[int]) -> list[int]:
 
 
 def _radix_sort_non_negative(values: list[int]) -> list[int]:
+    """对非负整数列表执行逐位稳定排序。"""
+
     # 只处理非负整数。
     result = values[:]
     if not result:
@@ -32,6 +44,8 @@ def _radix_sort_non_negative(values: list[int]) -> list[int]:
 
 
 def _counting_sort_by_digit(values: list[int], exp: int) -> list[int]:
+    """按 exp 指定的十进制位执行稳定计数排序。"""
+
     counts = [0] * 10
     output = [0] * len(values)
 

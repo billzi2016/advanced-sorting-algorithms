@@ -1,4 +1,14 @@
+"""简化版 TimSort。
+
+TimSort 利用真实数据中常见的自然有序片段（run），先识别 run，
+再用二分插入排序扩展短 run，最后按栈规则稳定归并。
+本实现保留核心教学思路，不追求完整 CPython TimSort 的所有工程优化。
+"""
+
+
 def tim_sort(values: list[int]) -> list[int]:
+    """识别自然 run 并稳定归并，返回升序副本。"""
+
     result = values[:]
     n = len(result)
     if n <= 1:
@@ -25,6 +35,8 @@ def tim_sort(values: list[int]) -> list[int]:
 
 
 def _min_run_length(n: int) -> int:
+    """计算简化 TimSort 使用的 min_run 长度。"""
+
     # 与 TimSort 思路一致，把初始 run 控制在便于平衡归并的范围。
     remainder = 0
     while n >= 64:
@@ -34,6 +46,8 @@ def _min_run_length(n: int) -> int:
 
 
 def _count_run(values: list[int], start: int, end: int) -> int:
+    """从 start 开始识别一个递增或递减 run，并返回 run 结束位置。"""
+
     if start + 1 == end:
         return end
 
@@ -56,6 +70,11 @@ def _binary_insertion_sort(
     end: int,
     sorted_start: int,
 ) -> None:
+    """把 [sorted_start, end) 中的元素插入到 [start, i) 的有序区间。
+
+    插入点用二分查找确定；元素移动仍然是线性的，但比较次数更少。
+    """
+
     if sorted_start <= start:
         sorted_start = start + 1
 
@@ -78,6 +97,8 @@ def _binary_insertion_sort(
 
 
 def _merge_collapse(values: list[int], runs: list[tuple[int, int]]) -> None:
+    """维护 run 栈不变量，避免后续归并顺序过度失衡。"""
+
     while len(runs) > 1:
         n = len(runs) - 1
 
@@ -94,6 +115,8 @@ def _merge_collapse(values: list[int], runs: list[tuple[int, int]]) -> None:
 
 
 def _merge_force_collapse(values: list[int], runs: list[tuple[int, int]]) -> None:
+    """输入扫描结束后，强制把剩余 run 合并成一个完整有序区间。"""
+
     # 输入扫描结束后，将栈上剩余 run 全部合并为一个有序区间。
     while len(runs) > 1:
         n = len(runs) - 2
@@ -103,6 +126,8 @@ def _merge_force_collapse(values: list[int], runs: list[tuple[int, int]]) -> Non
 
 
 def _merge_at(values: list[int], runs: list[tuple[int, int]], index: int) -> None:
+    """稳定合并 runs[index] 和 runs[index + 1] 两个相邻 run。"""
+
     start_a, length_a = runs[index]
     start_b, length_b = runs[index + 1]
     left = values[start_a : start_a + length_a]

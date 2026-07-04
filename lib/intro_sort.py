@@ -1,4 +1,14 @@
+"""IntroSort。
+
+IntroSort 是混合排序：先使用快速排序获得平均性能，
+当递归深度超过上限时切换到堆排序避免 O(n^2) 退化，
+最后用插入排序清理小区间。许多工程排序实现都采用类似思路。
+"""
+
+
 def intro_sort(values: list[int]) -> list[int]:
+    """使用快速排序、堆排序和插入排序混合策略返回升序副本。"""
+
     result = values[:]
     if len(result) <= 1:
         return result
@@ -12,6 +22,12 @@ def intro_sort(values: list[int]) -> list[int]:
 
 
 def _intro_sort(values: list[int], left: int, right: int, depth_limit: int) -> None:
+    """在闭区间内执行带深度限制的快速排序主体。
+
+    小于等于 16 的区间暂时不处理，留给最终的插入排序统一收尾，
+    这样可以减少递归调用和分区常数开销。
+    """
+
     while right - left > 16:
         if depth_limit == 0:
             # 快速排序分区过深时，直接用堆排序保证最坏 O(n log n)。
@@ -31,6 +47,8 @@ def _intro_sort(values: list[int], left: int, right: int, depth_limit: int) -> N
 
 
 def _partition(values: list[int], left: int, right: int) -> int:
+    """使用三数取中基准执行 Lomuto 风格分区，并返回基准最终位置。"""
+
     # 三数取中降低已排序、逆序等输入下选到极端基准的概率。
     pivot_index = _median_of_three(values, left, (left + right) // 2, right)
     pivot = values[pivot_index]
@@ -47,6 +65,8 @@ def _partition(values: list[int], left: int, right: int) -> int:
 
 
 def _median_of_three(values: list[int], a: int, b: int, c: int) -> int:
+    """返回 a、b、c 三个位置中值对应的下标。"""
+
     if values[a] < values[b]:
         if values[b] < values[c]:
             return b
@@ -62,6 +82,8 @@ def _median_of_three(values: list[int], a: int, b: int, c: int) -> int:
 
 
 def _heap_sort_range(values: list[int], left: int, right: int) -> None:
+    """对闭区间 [left, right] 执行原地堆排序。"""
+
     size = right - left + 1
 
     # 先在指定区间内建最大堆，再逐步把堆顶放到区间尾部。
@@ -74,6 +96,8 @@ def _heap_sort_range(values: list[int], left: int, right: int) -> None:
 
 
 def _sift_down(values: list[int], offset: int, root: int, size: int) -> None:
+    """在带 offset 的堆视图中向下调整 root。"""
+
     while True:
         child = root * 2 + 1
         if child >= size:
@@ -93,6 +117,8 @@ def _sift_down(values: list[int], offset: int, root: int, size: int) -> None:
 
 
 def _insertion_sort_range(values: list[int], left: int, right: int) -> None:
+    """对闭区间 [left, right] 执行插入排序。"""
+
     # 插入排序在小区间和近乎有序输入上常数开销较低。
     for i in range(left + 1, right + 1):
         current = values[i]

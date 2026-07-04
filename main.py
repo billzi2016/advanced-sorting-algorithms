@@ -1,3 +1,14 @@
+"""排序算法项目的命令行入口。
+
+支持三个主要动作：
+1. list：列出算法注册表中的元数据。
+2. verify：用固定样例和随机样例验证所有算法与 sorted() 一致。
+3. benchmark：生成本地输入数据并采样运行时间。
+
+入口文件只负责参数解析和流程编排，具体算法来自 lib/，benchmark 逻辑来自
+benchmarks/benchmark.py。
+"""
+
 import argparse
 import random
 
@@ -16,6 +27,12 @@ def build_correctness_cases(
     max_length: int,
     seed: int,
 ) -> list[list[int]]:
+    """构造正确性验证样例。
+
+    固定样例覆盖边界和典型分布；随机样例用固定 seed 生成，
+    保证每次验证输入一致，便于复现失败。
+    """
+
     # 固定样例覆盖边界输入和典型分布，随机样例负责补充更大的输入空间。
     cases = [
         [],
@@ -51,6 +68,8 @@ def build_correctness_cases(
 
 
 def select_algorithms(keys: str | None) -> list[AlgorithmSpec]:
+    """根据逗号分隔的 key 选择算法；未提供时选择全部算法。"""
+
     if not keys:
         return list(iter_algorithms())
 
@@ -63,6 +82,8 @@ def select_algorithms(keys: str | None) -> list[AlgorithmSpec]:
 
 
 def list_algorithms() -> None:
+    """以表格形式打印算法元数据。"""
+
     headers = [
         "key",
         "family",
@@ -93,6 +114,8 @@ def verify_algorithms(
     max_length: int,
     seed: int,
 ) -> bool:
+    """验证每个算法的排序结果和“不修改输入”约束。"""
+
     cases = build_correctness_cases(random_cases, max_length, seed)
 
     for spec in algorithms:
@@ -122,6 +145,8 @@ def verify_algorithms(
 
 
 def _print_table(headers: list[str], rows: list[list[str]]) -> None:
+    """打印简单的左对齐文本表格。"""
+
     widths = [
         max(len(headers[index]), *(len(row[index]) for row in rows))
         for index in range(len(headers))
@@ -134,6 +159,8 @@ def _print_table(headers: list[str], rows: list[list[str]]) -> None:
 
 
 def parse_args() -> argparse.Namespace:
+    """解析 CLI 参数和子命令。"""
+
     # 子命令保持轻量：list 看元数据，verify 做正确性验证，benchmark 做本地性能采样。
     parser = argparse.ArgumentParser(
         description="Sorting algorithm verification and benchmarking toolkit.",
@@ -163,6 +190,8 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
+    """执行 CLI 子命令；默认行为是 verify。"""
+
     args = parse_args()
     command = args.command or "verify"
 

@@ -1,3 +1,9 @@
+"""排序算法单元测试。
+
+测试重点不是证明某个算法的复杂度，而是统一验证项目接口约束：
+每个算法都必须返回与 sorted() 一致的结果，并且不能修改传入的原始列表。
+"""
+
 import random
 import unittest
 
@@ -5,13 +11,19 @@ from lib.registry import iter_algorithms
 
 
 class SortingAlgorithmTest(unittest.TestCase):
+    """覆盖算法注册表和全部排序函数的基础正确性测试。"""
+
     def test_algorithm_metadata_is_unique(self) -> None:
+        """算法 key 必须唯一，避免 CLI 选择和 benchmark 输出混淆。"""
+
         keys = [spec.key for spec in iter_algorithms()]
 
         self.assertEqual(len(keys), len(set(keys)))
         self.assertGreaterEqual(len(keys), 15)
 
     def test_all_algorithms_match_builtin_sorted(self) -> None:
+        """所有算法都要在同一批样例上匹配 Python 内置 sorted。"""
+
         cases = self._build_cases()
 
         for spec in iter_algorithms():
@@ -24,6 +36,8 @@ class SortingAlgorithmTest(unittest.TestCase):
                     self.assertEqual(source, case)
 
     def _build_cases(self) -> list[list[int]]:
+        """构造固定样例、随机样例和近乎有序样例。"""
+
         cases = [
             [],
             [1],

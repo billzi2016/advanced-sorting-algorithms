@@ -1,3 +1,10 @@
+"""排序算法注册表。
+
+这个模块把算法函数和它们的元数据集中放在一起，避免 README、CLI、
+测试和 benchmark 各自维护一份算法清单。新增算法时，通常只需要实现函数，
+再在 ALGORITHMS 中补一条 AlgorithmSpec。
+"""
+
 from dataclasses import dataclass
 from typing import Callable
 
@@ -25,6 +32,12 @@ SortFunction = Callable[[list[int]], list[int]]
 
 @dataclass(frozen=True)
 class AlgorithmSpec:
+    """单个排序算法的注册信息。
+
+    function 必须遵守项目统一接口：接收 list[int]，返回新的升序 list[int]，
+    不修改调用方传入的列表。复杂度和适用说明用于 CLI 展示和 README 对齐。
+    """
+
     # 注册表元数据用于 CLI、测试、benchmark 和文档保持同一套算法清单。
     key: str
     display_name: str
@@ -297,10 +310,14 @@ ALGORITHMS: tuple[AlgorithmSpec, ...] = (
 
 
 def iter_algorithms() -> tuple[AlgorithmSpec, ...]:
+    """返回全部算法注册信息。"""
+
     return ALGORITHMS
 
 
 def get_algorithm(key: str) -> AlgorithmSpec:
+    """按 key 查找算法注册信息；不存在时抛出 KeyError。"""
+
     for spec in ALGORITHMS:
         if spec.key == key:
             return spec
